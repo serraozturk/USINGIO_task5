@@ -1,0 +1,46 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+
+public class task5_10 {
+	
+    public static void main(String[] args) {
+        String bankAccountDigits = getUserInput("Enter the first three digits: ");
+
+        try {
+            URL url = new URL("https://ewib.nbp.pl/plewibnra?dokNazwa=plewibnra.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith(bankAccountDigits)) {
+                    String[] parts = line.split("\\|");
+                    if (parts.length >= 4) {
+                        String bankNumber = parts[0];
+                        String bankName = parts[3];
+                        System.out.println("Bank Number: " + bankNumber);
+                        System.out.println("Bank Name: " + bankName);
+                        return;
+                    }
+                }
+            }
+
+            System.out.println("Bank information not found ");
+        } catch (IOException e) {
+            System.out.println("An error occurred ");
+            e.printStackTrace();
+        }
+    }
+
+    private static String getUserInput(String message) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.print(message);
+        try {
+            return reader.readLine().trim();
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading input.");
+            return "";
+        }
+    }
+}
